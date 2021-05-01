@@ -40,9 +40,7 @@ export const CardsScreen: React.FC = () => {
     return photos.length > 0 && currentPhotoIndex > 0;
   }, [photos, currentPhotoIndex]);
 
-  const isActiveFavorites = React.useMemo(() => {
-    return photos.length > 0 && favoritesPhotos.length > 0;
-  }, [photos.length, favoritesPhotos.length]);
+
 
   const handleSwipe = React.useCallback((direction: 'left' | 'right', photo: RoverPhoto) => {
     setCurrentIndex((prev) => prev + 1);
@@ -65,12 +63,11 @@ export const CardsScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <ScreenHeader
-        title="My Mars"
+        title="Rooms"
         leftContent={() => (
           <TouchableOpacity
             hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}
-            disabled={!isActiveUndo}
-            onPress={handlePressUndo}
+
           >
             <Text
               style={[
@@ -78,28 +75,18 @@ export const CardsScreen: React.FC = () => {
                 !isActiveUndo && styles.headerLeftButtonInactive
               ]}
             >
-              Undo
+              None
             </Text>
           </TouchableOpacity>
         )}
         rightContent={() => (
-          <TouchableOpacity
-            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}
-            disabled={!isActiveFavorites}
-            onPress={() => nav.navigate('Favorites')}
-          >
-            <Image
-              source={require('../assets/icons/ic-heart-24.png')}
-              style={{
-                width: 24,
-                height: 24,
-                tintColor: isActiveFavorites
-                  ? Colors.accentPrimary
-                  : Colors.inactive
-              }}
-            />
-          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setCurrentIndex(0)}>
+          <Text style={styles.statusText}>
+            {loading || loadingMore ? 'Loading' : `${countPhotos} Rooms`}
+          </Text>
+        </TouchableOpacity>
         )}
+
       />
       <View style={styles.cardsContainer}>
         {loading ? (
@@ -115,13 +102,7 @@ export const CardsScreen: React.FC = () => {
           ))
         }
       </View>
-      <View style={[styles.statusContainer, { marginBottom: safeArea.bottom }]}>
-        <TouchableOpacity onPress={() => setCurrentIndex(0)}>
-          <Text style={styles.statusText}>
-            {loading || loadingMore ? 'Downloading' : `${countPhotos} Cards`}
-          </Text>
-        </TouchableOpacity>
-      </View>
+
     </View>
   );
 };

@@ -6,7 +6,6 @@ import { Colors } from '../theme/Colors';
 import * as Types from '../api/types';
 import { SCREEN_WIDTH, snapPointAnimation, Viewport } from '../utils';
 import { RoverPhoto } from './RoverPhoto';
-import { RoundedButton } from './RoundedButton';
 
 export const CARD_WIDTH = SCREEN_WIDTH - 32;
 export const CARD_HEIGHT = Viewport.height / (484 / 328);
@@ -31,7 +30,7 @@ export const Card = React.memo<CardProps>((props) => {
   const translateX = useSharedValue(0);
 
   const onGestureEvent = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent, 
+    PanGestureHandlerGestureEvent,
     { x: number; y: number }
   >({
     onStart: (_, ctx) => {
@@ -63,22 +62,12 @@ export const Card = React.memo<CardProps>((props) => {
     },
   });
 
-  const [isActiveLike, setIsActiveLike] = React.useState(true);
-  const [isActiveDislike, setIsActiveDislike] = React.useState(true);
-  
-  const handlePressLike = React.useCallback(() => {
-    setIsActiveLike(false);
-    translateX.value = withTiming(
-      SCREEN_WIDTH, 
-      { duration: 300 },
-      () => runOnJS(onSwipe)('right')
-    );
-  }, [onSwipe]);
+
 
   const handlePressDislike = React.useCallback(() => {
     setIsActiveDislike(false);
     translateX.value = withTiming(
-      -SCREEN_WIDTH, 
+      -SCREEN_WIDTH,
       { duration: 300 },
       () => runOnJS(onSwipe)('left')
     );
@@ -103,40 +92,16 @@ export const Card = React.memo<CardProps>((props) => {
   });
 
   return (
-    <View 
-      style={[StyleSheet.absoluteFill, styles.container]} 
+    <View
+      style={[StyleSheet.absoluteFill, styles.container]}
       pointerEvents={index === 2 ? 'auto' : 'none'}
-    > 
-      <View style={styles.buttonsContainer}>
-        <View style={styles.button}>
-          <RoundedButton 
-            disabled={!isActiveDislike}
-            onPress={handlePressDislike}
-          >
-            <Image 
-              source={require('../assets/icons/ic-dislike-24.png')}
-              style={styles.dislikeIcon}
-            />
-          </RoundedButton>
-        </View>
-        <View style={styles.button}>
-          <RoundedButton
-            disabled={!isActiveLike}
-            onPress={handlePressLike}
-            style={{ backgroundColor: Colors.accentPrimary }}
-          >
-            <Image 
-              source={require('../assets/icons/ic-like-24.png')}
-              style={styles.likeIcon}
-            />
-          </RoundedButton>
-        </View>
-      </View>
+    >
+
       <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View style={[styles.card, cardStyle]}> 
+        <Animated.View style={[styles.card, cardStyle]}>
           <RoverPhoto
             width={CARD_WIDTH}
-            height={CARD_HEIGHT} 
+            height={CARD_HEIGHT}
             item={item}
           />
         </Animated.View>
@@ -152,49 +117,10 @@ const styles = StyleSheet.create({
     top: -26,
   },
   card: {
-    width: CARD_WIDTH, 
+    width: CARD_WIDTH,
     height: CARD_HEIGHT,
     backgroundColor: Colors.backgroundPrimary,
-    borderRadius: 8,
-    zIndex: 4,
-    shadowColor: "#102027",
-    shadowOffset: {
-      width: 0,
-      height: 16,
-    },
-    shadowOpacity: 0.16,
-    shadowRadius: 24,
+    borderRadius: 12,
+    elevation: 8,
   },
-  borderRadius: {  
-    flex: 1, 
-    borderRadius: 8 
-  },
-  buttonsContainer: {
-    position: 'absolute', 
-    top: CARD_HEIGHT + (15 * 3), 
-    width: CARD_WIDTH,
-    flexDirection: 'row', 
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    zIndex: 5,
-  },
-  button: {
-    alignItems: 'center',
-    width: CARD_WIDTH / 2,
-    zIndex: 5
-  },
-  dislikeIcon: {
-    tintColor: '#FFF',
-    position: 'relative',
-    top: 2,
-    width: 24,
-    height: 22
-  },
-  likeIcon: {
-    tintColor: '#FFF',
-    position: 'relative',
-    bottom: 2,
-    width: 24,
-    height: 22
-  }
 });

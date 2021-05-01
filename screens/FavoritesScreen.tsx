@@ -14,15 +14,15 @@ export const FavoritesScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <ScreenHeader title="Favorites" />
-      <FlatList 
+      <FlatList
         data={photos}
         keyExtractor={(item) => `${item.id}`}
         contentContainerStyle={styles.listContainer}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <RoverPhoto 
+            <RoverPhoto
               width={CARD_WIDTH}
-              height={CARD_HEIGTH} 
+              height={CARD_HEIGTH}
               item={item}
             />
           </View>
