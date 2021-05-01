@@ -29,6 +29,8 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "description": "Animation test",
+    "githubUrl": "https://github.com/Daviz00/my-mars-app"
   }
 }
