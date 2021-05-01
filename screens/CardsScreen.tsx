@@ -16,7 +16,7 @@ const COUNT_CARDS = 3;
 export const CardsScreen: React.FC = () => {
   const { data, loading, loadMore, loadingMore } = useRoverImages();
   const { likePhoto, undoLikePhoto, photos: favoritesPhotos } = useFavoritesPhoto();
-  
+
   const safeArea = useSafeAreaInsets();
   const nav = useNavigation();
 
@@ -54,9 +54,9 @@ export const CardsScreen: React.FC = () => {
   const handlePressUndo = React.useCallback(() => {
     const prevIndex = currentPhotoIndex - 1;
     const photo = data?.photos[prevIndex];
-    
+
     setCurrentIndex(Math.max(0, prevIndex));
-    
+
     if (photo) {
       undoLikePhoto(photo.id);
     }
@@ -64,15 +64,15 @@ export const CardsScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader 
-        title="My Mars" 
+      <ScreenHeader
+        title="My Mars"
         leftContent={() => (
-          <TouchableOpacity 
-            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }} 
-            disabled={!isActiveUndo} 
+          <TouchableOpacity
+            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}
+            disabled={!isActiveUndo}
             onPress={handlePressUndo}
           >
-            <Text 
+            <Text
               style={[
                 styles.headerLeftButtonText,
                 !isActiveUndo && styles.headerLeftButtonInactive
@@ -83,18 +83,18 @@ export const CardsScreen: React.FC = () => {
           </TouchableOpacity>
         )}
         rightContent={() => (
-          <TouchableOpacity 
-            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }} 
-            disabled={!isActiveFavorites} 
+          <TouchableOpacity
+            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}
+            disabled={!isActiveFavorites}
             onPress={() => nav.navigate('Favorites')}
           >
             <Image
               source={require('../assets/icons/ic-heart-24.png')}
-              style={{ 
+              style={{
                 width: 24,
                 height: 24,
-                tintColor: isActiveFavorites 
-                  ? Colors.accentPrimary 
+                tintColor: isActiveFavorites
+                  ? Colors.accentPrimary
                   : Colors.inactive
               }}
             />
@@ -104,13 +104,13 @@ export const CardsScreen: React.FC = () => {
       <View style={styles.cardsContainer}>
         {loading ? (
           <LoaderSpinner />
-        ) : 
+        ) :
           photos.map((item, index) => (
             <Card
               key={item.id}
               index={index}
               item={item}
-              onSwipe={(direction) => handleSwipe(direction, item)} 
+              onSwipe={(direction) => handleSwipe(direction, item)}
             />
           ))
         }
@@ -156,6 +156,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.75,
-    color: Colors.textSecondary 
+    color: Colors.textSecondary
   }
 });
