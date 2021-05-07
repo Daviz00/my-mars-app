@@ -6,7 +6,6 @@ import { useRoverImages } from '../api/RoverImages';
 import { RoverPhoto } from '../api/types';
 import { Card } from '../components/Card';
 import { ScreenHeader } from '../components/Layout/ScreenHeader';
-import { useFavoritesPhoto } from '../context/FavoritesPhotoContext';
 import { Colors } from '../theme/Colors';
 
 const COUNT_CARDS = 3;
