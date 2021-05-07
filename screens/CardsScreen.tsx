@@ -1,15 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRoverImages } from '../api/RoverImages';
 import { RoverPhoto } from '../api/types';
 import { Card } from '../components/Card';
 import { ScreenHeader } from '../components/Layout/ScreenHeader';
-import { LoaderSpinner, Text } from '../components/UI';
+import { LoaderSpinner } from '../components/UI';
 import { useFavoritesPhoto } from '../context/FavoritesPhotoContext';
 import { Colors } from '../theme/Colors';
-import { isIOS } from '../utils';
 
 const COUNT_CARDS = 3;
 
@@ -66,13 +65,10 @@ export const CardsScreen: React.FC = () => {
         title="Rooms"
         leftContent={() => (
           <TouchableOpacity
-            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}
-
-          >
+            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}>
             <Text
               style={[
                 styles.headerLeftButtonText,
-                !isActiveUndo && styles.headerLeftButtonInactive
               ]}
             >
               None
@@ -89,9 +85,7 @@ export const CardsScreen: React.FC = () => {
 
       />
       <View style={styles.cardsContainer}>
-        {loading ? (
-          <LoaderSpinner />
-        ) :
+        {
           photos.map((item, index) => (
             <Card
               key={item.id}
@@ -109,8 +103,8 @@ export const CardsScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   headerLeftButtonText: {
-    paddingLeft: isIOS ? 7 : 16,
-    color: Colors.accentPrimary,
+    paddingLeft: 16,
+    color: Colors.textSecondary,
     fontSize: 16,
     fontWeight: '500',
     lineHeight: 20,
@@ -137,6 +131,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.75,
-    color: Colors.textSecondary
+    color: Colors.accentPrimary,
   }
 });
