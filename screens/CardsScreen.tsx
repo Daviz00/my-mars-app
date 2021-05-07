@@ -20,25 +20,25 @@ export const CardsScreen: React.FC = () => {
   const safeArea = useSafeAreaInsets();
   const nav = useNavigation();
 
-  const [currentPhotoIndex, setCurrentIndex] = React.useState(0);
+  const [currentCardIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
-    if (!loadingMore && data && currentPhotoIndex > data.photos.length - 10) {
+    if (!loadingMore && data && currentCardIndex > data.photos.length - 10) {
       loadMore();
     }
-  }, [data, currentPhotoIndex, loadingMore]);
+  }, [data, currentCardIndex, loadingMore]);
 
   const photos = React.useMemo(() => {
-    return data?.photos.slice(currentPhotoIndex, currentPhotoIndex + COUNT_CARDS).reverse() || [];
-  }, [data, currentPhotoIndex]);
+    return data?.photos.slice(currentCardIndex, currentCardIndex + COUNT_CARDS).reverse() || [];
+  }, [data, currentCardIndex]);
 
   const countPhotos = React.useMemo(() => {
-    return data?.photos.slice(currentPhotoIndex).length || 0;
-  }, [currentPhotoIndex, data]);
+    return data?.photos.slice(currentCardIndex).length || 0;
+  }, [currentCardIndex, data]);
 
   const isActiveUndo = React.useMemo(() => {
-    return photos.length > 0 && currentPhotoIndex > 0;
-  }, [photos, currentPhotoIndex]);
+    return photos.length > 0 && currentCardIndex > 0;
+  }, [photos, currentCardIndex]);
 
 
 
