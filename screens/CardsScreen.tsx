@@ -6,7 +6,6 @@ import { useRoverImages } from '../api/RoverImages';
 import { RoverPhoto } from '../api/types';
 import { Card } from '../components/Card';
 import { ScreenHeader } from '../components/Layout/ScreenHeader';
-import { LoaderSpinner } from '../components/UI';
 import { useFavoritesPhoto } from '../context/FavoritesPhotoContext';
 import { Colors } from '../theme/Colors';
 
@@ -14,30 +13,29 @@ const COUNT_CARDS = 3;
 
 export const CardsScreen: React.FC = () => {
   const { data, loading, loadMore, loadingMore } = useRoverImages();
-  const { likePhoto, undoLikePhoto, photos: favoritesPhotos } = useFavoritesPhoto();
 
   const safeArea = useSafeAreaInsets();
   const nav = useNavigation();
 
-  const [currentPhotoIndex, setCurrentIndex] = React.useState(0);
+  const [currentCardIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
-    if (!loadingMore && data && currentPhotoIndex > data.photos.length - 10) {
+    if (!loadingMore && data && currentCardIndex > data.photos.length - 10) {
       loadMore();
     }
-  }, [data, currentPhotoIndex, loadingMore]);
+  }, [data, currentCardIndex, loadingMore]);
 
   const photos = React.useMemo(() => {
-    return data?.photos.slice(currentPhotoIndex, currentPhotoIndex + COUNT_CARDS).reverse() || [];
-  }, [data, currentPhotoIndex]);
+    return data?.photos.slice(currentCardIndex, currentCardIndex + COUNT_CARDS).reverse() || [];
+  }, [data, currentCardIndex]);
 
   const countPhotos = React.useMemo(() => {
-    return data?.photos.slice(currentPhotoIndex).length || 0;
-  }, [currentPhotoIndex, data]);
+    return data?.photos.slice(currentCardIndex).length || 0;
+  }, [currentCardIndex, data]);
 
   const isActiveUndo = React.useMemo(() => {
-    return photos.length > 0 && currentPhotoIndex > 0;
-  }, [photos, currentPhotoIndex]);
+    return photos.length > 0 && currentCardIndex > 0;
+  }, [photos, currentCardIndex]);
 
 
 
@@ -48,16 +46,6 @@ export const CardsScreen: React.FC = () => {
     }
   }, []);
 
-  const handlePressUndo = React.useCallback(() => {
-    const prevIndex = currentPhotoIndex - 1;
-    const photo = data?.photos[prevIndex];
-
-    setCurrentIndex(Math.max(0, prevIndex));
-
-    if (photo) {
-      undoLikePhoto(photo.id);
-    }
-  }, [currentPhotoIndex, data]);
 
   return (
     <View style={styles.container}>
