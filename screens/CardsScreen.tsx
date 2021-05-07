@@ -49,16 +49,6 @@ export const CardsScreen: React.FC = () => {
     }
   }, []);
 
-  const handlePressUndo = React.useCallback(() => {
-    const prevIndex = currentPhotoIndex - 1;
-    const photo = data?.photos[prevIndex];
-
-    setCurrentIndex(Math.max(0, prevIndex));
-
-    if (photo) {
-      undoLikePhoto(photo.id);
-    }
-  }, [currentPhotoIndex, data]);
 
   return (
     <View style={styles.container}>
@@ -89,9 +79,7 @@ export const CardsScreen: React.FC = () => {
 
       />
       <View style={styles.cardsContainer}>
-        {loading ? (
-          <LoaderSpinner />
-        ) :
+        {
           photos.map((item, index) => (
             <Card
               key={item.id}
@@ -110,7 +98,8 @@ export const CardsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   headerLeftButtonText: {
     paddingLeft: isIOS ? 7 : 16,
-    color: Colors.accentPrimary,
+
+    color: Colors.textSecondary,
     fontSize: 16,
     fontWeight: '500',
     lineHeight: 20,
@@ -137,6 +126,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.75,
-    color: Colors.textSecondary
+    color: Colors.accentPrimary,
   }
 });
