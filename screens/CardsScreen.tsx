@@ -60,7 +60,6 @@ export const CardsScreen: React.FC = () => {
             <Text
               style={[
                 styles.headerLeftButtonText,
-                !isActiveUndo && styles.headerLeftButtonInactive
               ]}
             >
               None
