@@ -1,41 +1,44 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { StyleSheet, View, TouchableOpacity, Image, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRoverImages } from '../api/RoverImages';
 import { RoverPhoto } from '../api/types';
 import { Card } from '../components/Card';
 import { ScreenHeader } from '../components/Layout/ScreenHeader';
+import { LoaderSpinner, Text } from '../components/UI';
 import { useFavoritesPhoto } from '../context/FavoritesPhotoContext';
 import { Colors } from '../theme/Colors';
+import { isIOS } from '../utils';
 
 const COUNT_CARDS = 3;
 
 export const CardsScreen: React.FC = () => {
   const { data, loading, loadMore, loadingMore } = useRoverImages();
+  const { likePhoto, undoLikePhoto, photos: favoritesPhotos } = useFavoritesPhoto();
 
   const safeArea = useSafeAreaInsets();
   const nav = useNavigation();
 
-  const [currentCardIndex, setCurrentIndex] = React.useState(0);
+  const [currentPhotoIndex, setCurrentIndex] = React.useState(0);
 
   React.useEffect(() => {
-    if (!loadingMore && data && currentCardIndex > data.photos.length - 10) {
+    if (!loadingMore && data && currentPhotoIndex > data.photos.length - 10) {
       loadMore();
     }
-  }, [data, currentCardIndex, loadingMore]);
+  }, [data, currentPhotoIndex, loadingMore]);
 
   const photos = React.useMemo(() => {
-    return data?.photos.slice(currentCardIndex, currentCardIndex + COUNT_CARDS).reverse() || [];
-  }, [data, currentCardIndex]);
+    return data?.photos.slice(currentPhotoIndex, currentPhotoIndex + COUNT_CARDS).reverse() || [];
+  }, [data, currentPhotoIndex]);
 
   const countPhotos = React.useMemo(() => {
-    return data?.photos.slice(currentCardIndex).length || 0;
-  }, [currentCardIndex, data]);
+    return data?.photos.slice(currentPhotoIndex).length || 0;
+  }, [currentPhotoIndex, data]);
 
   const isActiveUndo = React.useMemo(() => {
-    return photos.length > 0 && currentCardIndex > 0;
-  }, [photos, currentCardIndex]);
+    return photos.length > 0 && currentPhotoIndex > 0;
+  }, [photos, currentPhotoIndex]);
 
 
 
@@ -46,6 +49,16 @@ export const CardsScreen: React.FC = () => {
     }
   }, []);
 
+  const handlePressUndo = React.useCallback(() => {
+    const prevIndex = currentPhotoIndex - 1;
+    const photo = data?.photos[prevIndex];
+
+    setCurrentIndex(Math.max(0, prevIndex));
+
+    if (photo) {
+      undoLikePhoto(photo.id);
+    }
+  }, [currentPhotoIndex, data]);
 
   return (
     <View style={styles.container}>
@@ -53,10 +66,13 @@ export const CardsScreen: React.FC = () => {
         title="Rooms"
         leftContent={() => (
           <TouchableOpacity
-            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}>
+            hitSlop={{ top: 4, left: 4, right: 4, bottom: 4 }}
+
+          >
             <Text
               style={[
                 styles.headerLeftButtonText,
+                !isActiveUndo && styles.headerLeftButtonInactive
               ]}
             >
               None
@@ -73,7 +89,9 @@ export const CardsScreen: React.FC = () => {
 
       />
       <View style={styles.cardsContainer}>
-        {
+        {loading ? (
+          <LoaderSpinner />
+        ) :
           photos.map((item, index) => (
             <Card
               key={item.id}
@@ -91,8 +109,8 @@ export const CardsScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   headerLeftButtonText: {
-    paddingLeft: 16,
-    color: Colors.textSecondary,
+    paddingLeft: isIOS ? 7 : 16,
+    color: Colors.accentPrimary,
     fontSize: 16,
     fontWeight: '500',
     lineHeight: 20,
@@ -119,6 +137,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     letterSpacing: 0.75,
-    color: Colors.accentPrimary,
+    color: Colors.textSecondary
   }
 });
